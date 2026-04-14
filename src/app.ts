@@ -1,9 +1,13 @@
 import express, { Request, Response } from "express";
+import initDB from "./config/db";
 
 const app = express();
 
 // parser
 app.use(express.json());
+
+// database initialized
+initDB();
 
 // route for test
 app.get("/", (req: Request, res: Response) => {

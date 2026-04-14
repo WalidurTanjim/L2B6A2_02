@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import initDB from "./config/db";
+import globalErrorHandler from "./middleware/globalErrorHandler";
 
 const app = express();
 
@@ -22,5 +23,8 @@ app.use((req: Request, res: Response) => {
         path: req.path
     });
 });
+
+// globalErrorHandler
+app.use(globalErrorHandler);
 
 export default app;

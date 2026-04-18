@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import initDB from "./config/db";
 import globalErrorHandler from "./middleware/globalErrorHandler";
+import { usersRoutes } from "./modules/users/users.routes";
 
 const app = express();
 
@@ -14,6 +15,9 @@ initDB();
 app.get("/", (req: Request, res: Response) => {
     res.send("Next Level Development B6A2_02");
 })
+
+// users API route
+app.use('/api/v1', usersRoutes);
 
 // 404 not found route
 app.use((req: Request, res: Response) => {

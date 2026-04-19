@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import initDB from "./config/db";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import { usersRoutes } from "./modules/users/users.routes";
+import { vheiclesRoute } from "./modules/vehicles/vehicles.routes";
 
 const app = express();
 
@@ -18,6 +19,9 @@ app.get("/", (req: Request, res: Response) => {
 
 // users API route
 app.use('/api/v1', usersRoutes);
+
+// vehicle API route
+app.use("/api/v1/vehicles", vheiclesRoute);
 
 // 404 not found route
 app.use((req: Request, res: Response) => {

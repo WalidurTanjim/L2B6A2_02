@@ -1,5 +1,5 @@
 import { pool } from "../../config/db";
-import { Booking } from "../../types/booking"
+import { Booking, UpdateBooking } from "../../types/booking"
 import AppError from "../../utils/AppError";
 
 // createBooking 
@@ -63,9 +63,20 @@ const deleteBookingById = async(id: string) => {
     return booking;
 }
 
+// updateBookingById
+const updateBookingById = async(status: UpdateBooking, id: string) => {
+    const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`, [status, id]);
+
+    if(result.rowCount === 0) throw new AppError("Booking not found!", 404);
+
+    const booking = result.rows[0];
+    return booking;
+}
+
 export const bookingsServices = {
     createBooking,
     getBookings,
     getBookingById,
     deleteBookingById,
+    updateBookingById
 }

@@ -64,9 +64,26 @@ const deleteBookingById = catchAsync(async(req: Request, res: Response) => {
     })
 })
 
+// updateBookingById
+const updateBookingById = catchAsync(async(req: Request, res: Response) => {
+    const { bookingId } = req.params;
+    const { status } = req.body;
+
+    const result = await bookingsServices.updateBookingById(status, bookingId as string);
+
+    if(result.status === 'cancelled') {
+        res.status(200).json({
+            success: true,
+            message: "Booking cancelled successfully",
+            data: result
+        })
+    }
+})
+
 export const bookingsControllers = {
     createBooking,
     getBookings,
     getBookingById,
     deleteBookingById,
+    updateBookingById
 }

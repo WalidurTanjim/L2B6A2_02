@@ -13,4 +13,7 @@ route.get('/:bookingId', bookingsControllers.getBookingById);
 // DELETE method
 route.delete('/:bookingId', bookingsControllers.deleteBookingById);
 
+// PUT method
+route.put('/:bookingId', bookingsControllers.updateBookingById);
+
 export const bookingsRoute = route;

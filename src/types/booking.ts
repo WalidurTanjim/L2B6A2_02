@@ -4,3 +4,7 @@ export type Booking = {
     rent_start_date: Date;
     rent_end_date: Date;
 }
+
+export type UpdateBooking = {
+    status: "cancelled" | "returned"
+}

@@ -12,6 +12,17 @@ const createVehicle = async(payload: Vehicle) => {
     return vehicle
 }
 
+// getVehicles
+const getVehicles = async() => {
+    const result = await pool.query(`SELECT * FROM vehicles`);
+
+    if(result.rows.length === 0) throw new AppError("Vehicles not found!", 404);
+
+    const vehicles = result.rows;
+    return vehicles;
+}
+
 export const vehiclesServices = {
     createVehicle,
+    getVehicles,
 }

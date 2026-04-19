@@ -1,6 +1,6 @@
 import AppError from "./AppError"
 
-export const handlePostgresError = (err: any) => {
+const handlePostgresError = (err: any) => {
     // unique violation
     if(err.code === "23505") {
         return new AppError("Duplicate value violates unique constraint", 409, "DUPLICATE");
@@ -20,3 +20,5 @@ export const handlePostgresError = (err: any) => {
 
     return new AppError("Database error", 500);
 };
+
+export default handlePostgresError;

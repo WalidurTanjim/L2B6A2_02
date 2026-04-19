@@ -15,7 +15,10 @@ class AppError extends Error {
         if(errorCode !== undefined) {
             this.errorCode = errorCode;
         }
-        this.details = details;
+        
+        if(details !== undefined) {
+            this.details = details;
+        }
 
         Error.captureStackTrace(this, this.constructor);
     }

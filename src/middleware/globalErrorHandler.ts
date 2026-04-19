@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { handlePostgresError } from "../utils/PostgresError";
+import handlePostgresError from "../utils/PostgresError";
 import AppError from "../utils/AppError";
 
 const sendErrorDev = (err: any, res: Response) => {
@@ -28,8 +28,12 @@ const sendErrorProd = (err: any, res: Response) => {
 }
 
 const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    let error = { ...err };
+    console.log("✅✅✅ err from global error handler:", err);
+    console.log("✅✅✅ destructured err:", ...err);
+    // let error = { ...err };
+    let error = err;
     error.message = err.message;
+    console.log("✅✅✅ error from err:", error);
 
     // PostgreSQL error
     if(err.code) {

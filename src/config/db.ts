@@ -22,6 +22,18 @@ const initDB = async() => {
                 )
             `);
 
+        // vehicle table
+        await pool.query(`
+                CREATE TABLE IF NOT EXISTS vehicles(
+                    id SERIAL NOT NULL,
+                    vehicle_name VARCHAR(250) NOT NULL,
+                    type VARCHAR(20) NOT NULL,
+                    registration_number VARCHAR(150) UNIQUE NOT NULL,
+                    daily_rent_price NUMERIC NOT NULL CHECK (daily_rent_price > 0),
+                    availability_status VARCHAR(15) NOT NULL DEFAULT 'available' CHECK (availability_status IN ('available', 'booked'))
+                )
+            `);
+
         await pool.query("COMMIT");
     }catch(err: any) {
         await pool.query("ROLLBACK");

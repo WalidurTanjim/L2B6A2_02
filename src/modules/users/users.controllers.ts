@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import { usersServices } from "./users.services";
 import AppError from "../../utils/AppError";
 
 // createUser
-const createUser = catchAsync(async(req: Request, res: Response, next: NextFunction) => {
+const createUser = catchAsync(async(req: Request, res: Response) => {
     const { name, email, password, phone, role } = req.body;
     if(!name) throw new AppError("Name is required", 400);
     if(!email) throw new AppError("Email is required", 400);

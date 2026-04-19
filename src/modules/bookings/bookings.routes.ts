@@ -10,4 +10,7 @@ route.post('/', bookingsControllers.createBooking);
 route.get('/', bookingsControllers.getBookings);
 route.get('/:bookingId', bookingsControllers.getBookingById);
 
+// DELETE method
+route.delete('/:bookingId', bookingsControllers.deleteBookingById);
+
 export const bookingsRoute = route;

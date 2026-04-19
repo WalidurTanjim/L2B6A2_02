@@ -8,5 +8,6 @@ route.post('/', bookingsControllers.createBooking);
 
 // GET method
 route.get('/', bookingsControllers.getBookings);
+route.get('/:bookingId', bookingsControllers.getBookingById);
 
 export const bookingsRoute = route;

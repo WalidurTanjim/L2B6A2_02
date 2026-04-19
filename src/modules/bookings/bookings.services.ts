@@ -43,7 +43,18 @@ const getBookings = async() => {
     return booking;
 }
 
+// getBookingById
+const getBookingById = async(id: string) => {
+    const result = await pool.query(`SELECT * FROM bookings WHERE id=$1`, [id]);
+
+    if(result.rowCount === 0) throw new AppError("Booking not found!", 404);
+
+    const booking = result.rows[0];
+    return booking;
+}
+
 export const bookingsServices = {
     createBooking,
     getBookings,
+    getBookingById,
 }

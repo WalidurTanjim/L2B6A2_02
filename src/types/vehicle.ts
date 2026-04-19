@@ -5,3 +5,4 @@ export type Vehicle = {
     daily_rent_price: number;
     availability_status: 'available' | 'booked';
 };
+

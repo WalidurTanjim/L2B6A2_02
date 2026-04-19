@@ -33,6 +33,17 @@ const createBooking = async(payload: Booking) => {
     return booking;
 }
 
+// getBookings
+const getBookings = async() => {
+    const result = await pool.query(`SELECT * FROM bookings`);
+
+    if(result.rows.length === 0) throw new AppError("No booking available", 400);
+
+    const booking = result.rows;
+    return booking;
+}
+
 export const bookingsServices = {
     createBooking,
+    getBookings,
 }

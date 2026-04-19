@@ -22,6 +22,24 @@ const createBooking = catchAsync(async(req: Request, res: Response) => {
     })
 })
 
+// getBookings
+const getBookings = catchAsync(async(req: Request, res: Response) => {
+    const result = await bookingsServices.getBookings();
+
+    if(result.length === 0) {
+        res.status(404).json({
+            success: false,
+            message: "Bookings not available",
+            data: null
+        })
+    }else res.status(200).json({
+        success: true,
+        message: "Bookings retrieved successfully",
+        data: result
+    })
+})
+
 export const bookingsControllers = {
     createBooking,
+    getBookings,
 }

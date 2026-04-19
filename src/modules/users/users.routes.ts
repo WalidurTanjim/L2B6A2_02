@@ -13,4 +13,7 @@ route.get("/users/:userId", usersControllers.getUserById);
 // DELETE method
 route.delete("/users/:userId", usersControllers.deleteUserById);
 
+// PUT method
+route.put("/users/:userId", usersControllers.updateUserById);
+
 export const usersRoutes = route;

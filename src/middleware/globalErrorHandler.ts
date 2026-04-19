@@ -28,11 +28,11 @@ const sendErrorProd = (err: any, res: Response) => {
 }
 
 const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    console.log("✅✅✅ err from global error handler:", err);
+    // console.log("✅✅✅ err from global error handler:", err);
     // let error = { ...err };
     let error = err;
     error.message = err.message;
-    console.log("✅✅✅ error from err:", error);
+    // console.log("✅✅✅ error from err:", error);
 
     // PostgreSQL error
     if(err.code) {

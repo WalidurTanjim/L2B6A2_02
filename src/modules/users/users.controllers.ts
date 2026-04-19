@@ -67,9 +67,24 @@ const deleteUserById = catchAsync(async(req: Request, res: Response) => {
     })
 })
 
+// updateUserById
+const updateUserById = catchAsync(async(req: Request, res: Response) => {
+    const { userId } = req.params;
+    const { name, email, phone, role } = req.body;
+    
+    const result = await usersServices.updateUserById({ name, email, phone, role }, userId as string);
+
+    res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+        data: result
+    })
+})
+
 export const usersControllers = {
     createUser,
     getUsers,
     getUserById,
     deleteUserById,
+    updateUserById
 }

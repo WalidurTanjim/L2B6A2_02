@@ -1,5 +1,5 @@
 import { pool } from "../../config/db";
-import { User } from "../../types/user";
+import { UpdateUser, User } from "../../types/user";
 import bcrypt from "bcryptjs";
 import AppError from "../../utils/AppError";
 
@@ -43,9 +43,22 @@ const deleteUserById = async(id: string) => {
     return user;
 }
 
+// updateUserById
+const updateUserById = async(payload: UpdateUser, id: string) => {
+    const { name, email, phone, role } = payload;
+
+    const result = await pool.query(`UPDATE users SET name=$1, email=$2, phone=$3, role=$4 WHERE id=$5 RETURNING *`, [name, email, phone, role, id]);
+
+    if(result.rowCount === 0) throw new AppError("User not found!", 404);
+
+    const user = result.rows[0];
+    return user;
+}
+
 export const usersServices = {
     createUser,
     getUsers,
     getUserById,
     deleteUserById,
+    updateUserById
 }

@@ -5,3 +5,10 @@ export type User = {
     phone: string;
     role: "admin" | "customer";
 }
+
+export type UpdateUser = {
+    name: string;
+    email: string;
+    phone: string;
+    role: "admin" | "customer"
+}

@@ -38,6 +38,7 @@ const getVehicleById = catchAsync(async(req: Request, res: Response) => {
     const { vehicleId } = req.params;
 
     const result = await vehiclesServices.getVehicleById(vehicleId as string);
+
     res.status(200).json({
         success: true,
         message: "Vehicle rtrived successfully",
@@ -45,8 +46,21 @@ const getVehicleById = catchAsync(async(req: Request, res: Response) => {
     })
 })
 
+// deleteVehicleById
+const deleteVehicleById = catchAsync(async(req: Request, res: Response) => {
+    const { vehicleId } = req.params;
+
+    const result = await vehiclesServices.deleteVehicleById(vehicleId as string);
+
+    res.status(200).json({
+        success: true,
+        message: "Vehicle deleted successfully"
+    })
+})
+
 export const vehiclesControllers = {
     createVehicle,
     getVehicles,
     getVehicleById,
+    deleteVehicleById,
 }

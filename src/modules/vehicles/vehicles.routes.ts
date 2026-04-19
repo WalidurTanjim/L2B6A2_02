@@ -10,4 +10,7 @@ route.post("/", vehiclesControllers.createVehicle);
 route.get("/", vehiclesControllers.getVehicles);
 route.get("/:vehicleId", vehiclesControllers.getVehicleById);
 
+// DELETE method
+route.delete('/:vehicleId', vehiclesControllers.deleteVehicleById)
+
 export const vheiclesRoute = route;

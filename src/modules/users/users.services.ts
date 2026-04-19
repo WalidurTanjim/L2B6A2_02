@@ -1,6 +1,7 @@
 import { pool } from "../../config/db";
 import { User } from "../../types/user";
 import bcrypt from "bcryptjs";
+import AppError from "../../utils/AppError";
 
 // createUser
 const createUser = async(payload: User) => {
@@ -22,7 +23,18 @@ const getUsers = async() => {
     return users;
 }
 
+// getUserById
+const getUserById = async(id: string) => {
+    const result = await pool.query(`SELECT * FROM users WHERE id=$1`, [id]);
+
+    if(result.rowCount === 0) throw new AppError("User not found!", 400);
+    
+    const user = result.rows[0];
+    return user;
+}
+
 export const usersServices = {
     createUser,
     getUsers,
+    getUserById,
 }

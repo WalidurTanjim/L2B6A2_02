@@ -8,5 +8,6 @@ route.post('/auth/signup', usersControllers.createUser);
 
 // GET method
 route.get("/users", usersControllers.getUsers);
+route.get("/users/:userId", usersControllers.getUserById);
 
 export const usersRoutes = route;

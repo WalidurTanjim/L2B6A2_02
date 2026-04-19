@@ -8,5 +8,6 @@ route.post("/", vehiclesControllers.createVehicle);
 
 // GET method
 route.get("/", vehiclesControllers.getVehicles);
+route.get("/:vehicleId", vehiclesControllers.getVehicleById);
 
 export const vheiclesRoute = route;

@@ -33,7 +33,20 @@ const getVehicles = catchAsync(async(req: Request, res: Response) =>{
     })
 })
 
+// getVehicleById
+const getVehicleById = catchAsync(async(req: Request, res: Response) => {
+    const { vehicleId } = req.params;
+
+    const result = await vehiclesServices.getVehicleById(vehicleId as string);
+    res.status(200).json({
+        success: true,
+        message: "Vehicle rtrived successfully",
+        data: result
+    })
+})
+
 export const vehiclesControllers = {
     createVehicle,
     getVehicles,
+    getVehicleById,
 }

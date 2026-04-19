@@ -22,7 +22,18 @@ const getVehicles = async() => {
     return vehicles;
 }
 
+// getVehicleById
+const getVehicleById = async(id: string) => {
+    const result = await pool.query(`SELECT * FROM vehicles WHERE id=$1`, [id]);
+
+    if(result.rowCount === 0) throw new AppError("Vehicle not found!", 404);
+
+    const vehicles = result.rows;
+    return vehicles
+}
+
 export const vehiclesServices = {
     createVehicle,
     getVehicles,
+    getVehicleById,
 }

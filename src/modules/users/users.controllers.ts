@@ -47,7 +47,7 @@ const getUserById = catchAsync(async(req: Request, res: Response) => {
     const { userId } = req.params;
 
     const result = await usersServices.getUserById(userId as string);
-    
+
     res.status(200).json({
         success: true,
         message: "User retrived successfully",
@@ -55,8 +55,21 @@ const getUserById = catchAsync(async(req: Request, res: Response) => {
     })
 })
 
+// deleteUserById
+const deleteUserById = catchAsync(async(req: Request, res: Response) => {
+    const { userId } = req.params;
+
+    const result = await usersServices.deleteUserById(userId as string);
+
+    res.status(200).json({
+        success: true,
+        message: "User deleted successfully"
+    })
+})
+
 export const usersControllers = {
     createUser,
     getUsers,
     getUserById,
+    deleteUserById,
 }

@@ -10,4 +10,7 @@ route.post('/auth/signup', usersControllers.createUser);
 route.get("/users", usersControllers.getUsers);
 route.get("/users/:userId", usersControllers.getUserById);
 
+// DELETE method
+route.delete("/users/:userId", usersControllers.deleteUserById);
+
 export const usersRoutes = route;

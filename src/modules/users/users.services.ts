@@ -27,8 +27,18 @@ const getUsers = async() => {
 const getUserById = async(id: string) => {
     const result = await pool.query(`SELECT * FROM users WHERE id=$1`, [id]);
 
-    if(result.rowCount === 0) throw new AppError("User not found!", 400);
+    if(result.rowCount === 0) throw new AppError("User not found!", 404);
     
+    const user = result.rows[0];
+    return user;
+}
+
+// deleteUserById
+const deleteUserById = async(id: string) => {
+    const result = await pool.query(`DELETE FROM users WHERE id=$1 RETURNING *`, [id]);
+
+    if(result.rowCount === 0) throw new AppError("User not found!", 404);
+
     const user = result.rows[0];
     return user;
 }
@@ -37,4 +47,5 @@ export const usersServices = {
     createUser,
     getUsers,
     getUserById,
+    deleteUserById,
 }

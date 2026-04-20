@@ -5,7 +5,8 @@ dotenv.config({ path: path.join(process.cwd(), ".env") });
 
 const config = {
     PORT: process.env.PORT,
-    PG_CONNECTIN_STRING: process.env.PG_CONNECTIN_STRING
+    PG_CONNECTIN_STRING: process.env.PG_CONNECTIN_STRING,
+    TOKEN_SECRET: process.env.TOKEN_SECRET
 };
 
 export default config;

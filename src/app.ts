@@ -4,6 +4,7 @@ import globalErrorHandler from "./middleware/globalErrorHandler";
 import { usersRoutes } from "./modules/users/users.routes";
 import { vheiclesRoute } from "./modules/vehicles/vehicles.routes";
 import { bookingsRoute } from "./modules/bookings/bookings.routes";
+import { authRoutes } from "./modules/auth/auth.routes";
 
 const app = express();
 
@@ -17,6 +18,9 @@ initDB();
 app.get("/", (req: Request, res: Response) => {
     res.send("Next Level Development B6A2_02");
 })
+
+// auth API route
+app.use('/api/v1/auth', authRoutes);
 
 // users API route
 app.use('/api/v1', usersRoutes);

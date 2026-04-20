@@ -6,6 +6,11 @@ export type User = {
     role: "admin" | "customer";
 }
 
+export type LoginUser = {
+    email: string;
+    password: string;
+}
+
 export type UpdateUser = {
     name: string;
     email: string;

@@ -12,7 +12,7 @@ route.get("/users", auth("admin"), usersControllers.getUsers);
 route.get("/users/:userId", usersControllers.getUserById);
 
 // DELETE method
-route.delete("/users/:userId", usersControllers.deleteUserById);
+route.delete("/users/:userId", auth("admin"), usersControllers.deleteUserById);
 
 // PUT method
 route.put("/users/:userId", usersControllers.updateUserById);

@@ -10,7 +10,7 @@ const auth = (...roles: string[]) => {
         const authHeader = req.headers.authorization;
         if(!authHeader) throw new AppError("Forbidden access", 403);
 
-        if(!authHeader.startsWith('Bearar ')) throw new AppError("Invaid token format", 401);
+        if(!authHeader.startsWith('Bearer ')) throw new AppError("Invaid token format", 401);
 
         const token = authHeader.split(' ')[1];
 

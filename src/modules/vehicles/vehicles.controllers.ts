@@ -5,9 +5,6 @@ import AppError from "../../utils/AppError";
 
 // createVehicle 
 const createVehicle = catchAsync(async(req: Request, res: Response) => {
-    const user = req.user;
-    console.log("💠💠 Vehicle user:", user);
-
     const { vehicle_name, type, registration_number, daily_rent_price, availability_status } = req.body;
 
     if(!vehicle_name) throw new AppError("Vehicle name is required", 400);

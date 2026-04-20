@@ -6,6 +6,10 @@ import AppError from "../../utils/AppError";
 const createBooking = async(payload: Booking) => {
     const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
 
+    // find user with customer_id
+    const findUser = await pool.query(`SELECT * FROM users WHERE id=$1`, [customer_id]);
+    if(findUser.rows.length < 1) throw new AppError("User not found!", 404);
+
     // date validation 
     if(new Date(rent_end_date) <= new Date(rent_start_date)) throw new AppError("End date must be greater than start date", 400);
 
@@ -19,7 +23,6 @@ const createBooking = async(payload: Booking) => {
     // calculate days
     const start = new Date(rent_start_date);
     const end = new Date(rent_end_date);
-    console.log("Start & end date:", start, end);
 
     const differentTime = end.getTime() - start.getTime();
     const totalDays = Math.ceil(differentTime / (1000 * 60 * 60 * 24));
@@ -30,7 +33,15 @@ const createBooking = async(payload: Booking) => {
     const result = await pool.query(`INSERT INTO bookings(customer_id, vehicle_id, rent_start_date, rent_end_date, total_price) VALUES($1, $2, $3, $4, $5) RETURNING *`, [customer_id, vehicle_id, rent_start_date, rent_end_date, total_price]);
 
     const booking = result.rows[0];
-    return booking;
+    
+    let updatedVehicle;
+
+    if(booking) {
+        const updateVehicleStatus = await pool.query(`UPDATE vehicles SET availability_status=$1 WHERE id=$2 RETURNING *`, ['booked', vehicle_id]);
+        updatedVehicle = updateVehicleStatus.rows[0];
+    }
+    
+    return { booking, updatedVehicle };
 }
 
 // getBookings

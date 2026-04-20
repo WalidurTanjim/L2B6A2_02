@@ -14,7 +14,7 @@ route.get("/users/:userId", usersControllers.getUserById);
 // DELETE method
 route.delete("/users/:userId", auth("admin"), usersControllers.deleteUserById);
 
-// PUT method
+// PUT method (not completed)
 route.put("/users/:userId", usersControllers.updateUserById);
 
 export const usersRoutes = route;

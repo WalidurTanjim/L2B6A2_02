@@ -14,11 +14,19 @@ const createBooking = catchAsync(async(req: Request, res: Response) => {
     const booking = req.body;
 
     const result = await bookingsServices.createBooking(booking);
+    const { booking: bookingInfo, updatedVehicle } = result
+    const { vehicle_name, daily_rent_price} = updatedVehicle;
 
     res.status(201).json({
         success: true,
         message: "Booking created successfully",
-        data: result
+        data: {
+            ...bookingInfo, 
+            "vehicle": {
+                vehicle_name,
+                daily_rent_price
+            }
+        }
     })
 })
 

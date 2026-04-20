@@ -10,9 +10,6 @@ route.post('/', bookingsControllers.createBooking);
 route.get('/', bookingsControllers.getBookings);
 route.get('/:bookingId', bookingsControllers.getBookingById);
 
-// DELETE method
-route.delete('/:bookingId', bookingsControllers.deleteBookingById);
-
 // PUT method
 route.put('/:bookingId', bookingsControllers.updateBookingById);
 

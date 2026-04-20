@@ -53,16 +53,6 @@ const getBookingById = async(id: string) => {
     return booking;
 }
 
-// deleteBookingById
-const deleteBookingById = async(id: string) => {
-    const result = await pool.query(`DELETE FROM bookings WHERE id=$1 RETURNING *`, [id]);
-
-    if(result.rowCount === 0) throw new AppError("Booking not found!", 404);
-
-    const booking = result.rows[0];
-    return booking;
-}
-
 // updateBookingById
 const updateBookingById = async(status: UpdateBooking, id: string) => {
     const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`, [status, id]);
@@ -77,6 +67,5 @@ export const bookingsServices = {
     createBooking,
     getBookings,
     getBookingById,
-    deleteBookingById,
     updateBookingById
 }

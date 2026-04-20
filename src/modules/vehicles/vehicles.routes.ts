@@ -1,10 +1,11 @@
 import express from "express";
 import { vehiclesControllers } from "./vehicles.controllers";
+import auth from "../../middleware/auth";
 
 const route = express.Router();
 
 // POST method
-route.post("/", vehiclesControllers.createVehicle);
+route.post("/", auth("admin"), vehiclesControllers.createVehicle);
 
 // GET method
 route.get("/", vehiclesControllers.getVehicles);

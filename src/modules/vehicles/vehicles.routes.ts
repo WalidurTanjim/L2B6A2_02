@@ -12,7 +12,7 @@ route.get("/", vehiclesControllers.getVehicles);
 route.get("/:vehicleId", vehiclesControllers.getVehicleById);
 
 // DELETE method
-route.delete('/:vehicleId', vehiclesControllers.deleteVehicleById);
+route.delete('/:vehicleId', auth("admin"), vehiclesControllers.deleteVehicleById);
 
 // PUT method
 route.put("/:vehicleId", auth("admin"), vehiclesControllers.updateVehicleById);

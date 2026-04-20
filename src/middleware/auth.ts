@@ -6,7 +6,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const auth = (...roles: string[]) => {
     return catchAsync(async(req: Request, res: Response, next: NextFunction) => {
-        console.log("⭕⭕⭕ Roles:", roles);
         const authHeader = req.headers.authorization;
         if(!authHeader) throw new AppError("Forbidden access", 403);
 

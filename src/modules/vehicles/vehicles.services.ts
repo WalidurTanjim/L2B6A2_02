@@ -34,8 +34,22 @@ const getVehicleById = async(id: string) => {
 
 // deleteVehicleById
 const deleteVehicleById = async(id: string) => {
-    const result = await pool.query(`DELETE FROM vehicles WHERE id=$1 RETURNING *`, [id]);
+    // find vehicle is this exist or not
+    const vehicleRes = await pool.query(`SELECT * FROM vehicles WHERE id=$1`, [id]);
+    if(!vehicleRes) throw new AppError("Vehicel not found!", 404)
 
+    // find booking with vehicle_id
+    const bookingRes = await pool.query(`SELECT * FROM bookings WHERE vehicle_id=$1`, [id]);
+
+    if(bookingRes.rows.length > 0) {
+        for(let booking of bookingRes.rows) {
+            // check is their any active booking or not
+            if(booking.status === 'active')
+                throw new AppError("Can't delete this vahicle. It has active booking", 409);
+        }
+    }
+
+    const result = await pool.query(`DELETE FROM vehicles WHERE id=$1 RETURNING *`, [id]);
     if(result.rowCount === 0) throw new AppError("Vehicle not found!", 404);
 
     const vehicle = result.rows[0];

@@ -50,7 +50,7 @@ const getVehicleById = catchAsync(async(req: Request, res: Response) => {
 const deleteVehicleById = catchAsync(async(req: Request, res: Response) => {
     const { vehicleId } = req.params;
 
-    const result = await vehiclesServices.deleteVehicleById(vehicleId as string);
+    await vehiclesServices.deleteVehicleById(vehicleId as string);
 
     res.status(200).json({
         success: true,

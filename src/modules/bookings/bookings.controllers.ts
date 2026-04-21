@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import AppError from "../../utils/AppError";
 import { bookingsServices } from "./bookings.services";
+import { JwtPayload } from "jsonwebtoken";
 
 // createBooking
 const createBooking = catchAsync(async(req: Request, res: Response) => {
@@ -32,7 +33,10 @@ const createBooking = catchAsync(async(req: Request, res: Response) => {
 
 // getBookings
 const getBookings = catchAsync(async(req: Request, res: Response) => {
-    const result = await bookingsServices.getBookings();
+    const user = req?.user;
+
+    const result = await bookingsServices.getBookings(user as JwtPayload);
+    // console.log("All booking response from ctrl:", result);
 
     if(result.length === 0) {
         res.status(404).json({
@@ -65,7 +69,6 @@ const updateBookingById = catchAsync(async(req: Request, res: Response) => {
     const { bookingId } = req.params;
     const { status } = req.body;
     const user = req.user;
-    console.log(user)
 
     if(!['cancelled', 'returned'].includes(status)) throw new AppError("Invalid status", 400);
 

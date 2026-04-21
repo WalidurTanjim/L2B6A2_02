@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { pool } from "../../config/db";
 import { Booking, UpdateBooking } from "../../types/booking"
 import AppError from "../../utils/AppError";
@@ -52,13 +53,43 @@ const createBooking = async(payload: Booking) => {
 }
 
 // getBookings
-const getBookings = async() => {
-    const result = await pool.query(`SELECT * FROM bookings`);
+const getBookings = async(user: JwtPayload) => {
+    const { email } = user;
+    // console.log("Req user from srv:", user);
 
-    if(result.rows.length === 0) throw new AppError("No booking available", 400);
+    const client = await pool.connect();
 
-    const booking = result.rows;
-    return booking;
+    try{
+        await client.query("BEGIN");
+
+        // find user by email
+        const findUserRes = await client.query(`SELECT * FROM users WHERE email=$1`, [email]);
+        const userRes = findUserRes.rows[0];
+        const { id, role } = userRes;
+        // console.log("User from db:", userRes);
+
+        // get bookings by role
+        if(role === "admin") {
+            const result = await client.query(`SELECT * FROM bookings`);
+            const booking = result.rows;
+            // console.log("Admin bookings:", booking);
+
+            await client.query("COMMIT");
+            return booking;
+        }else{
+            const result = await client.query(`SELECT * FROM bookings WHERE customer_id=$1`, [id]);
+            const booking = result.rows;
+            // console.log("Customer booking:", booking);
+
+            await client.query("COMMIT");
+            return booking;
+        }
+    }catch(err) {
+        await client.query("ROLLBACK");
+        throw err;
+    }finally{
+        client.release();
+    }
 }
 
 // getBookingById

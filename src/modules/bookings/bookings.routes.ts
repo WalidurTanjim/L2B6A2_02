@@ -8,7 +8,7 @@ const route = express.Router();
 route.post('/', auth("admin", "customer"), bookingsControllers.createBooking);
 
 // GET method
-route.get('/', bookingsControllers.getBookings);
+route.get('/', auth("admin", "customer"), bookingsControllers.getBookings);
 route.get('/:bookingId', bookingsControllers.getBookingById);
 
 // PUT method

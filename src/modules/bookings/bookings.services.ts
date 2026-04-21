@@ -10,7 +10,14 @@ const createBooking = async(payload: Booking) => {
     const findUser = await pool.query(`SELECT * FROM users WHERE id=$1`, [customer_id]);
     if(findUser.rows.length < 1) throw new AppError("User not found!", 404);
 
-    // date validation 
+    // date validation (start date must be greater than or equal today)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const startDate = new Date(rent_start_date);
+
+    if(startDate < today) throw new AppError("Start date must be greater than or equal today", 400);
+
+    // date validation (end date must be greater than start date)
     if(new Date(rent_end_date) <= new Date(rent_start_date)) throw new AppError("End date must be greater than start date", 400);
 
     // get vehicle price

@@ -44,11 +44,21 @@ const getBookings = catchAsync(async(req: Request, res: Response) => {
             message: "Bookings not available",
             data: null
         })
-    }else res.status(200).json({
-        success: true,
-        message: "Bookings retrieved successfully",
-        data: result
-    })
+    }else {
+        if(user?.role === "customer") {
+            res.status(200).json({
+                success: true,
+                message: "Your bookings retrieved successfully",
+                data: result
+            })
+        }else {
+            res.status(200).json({
+                success: true,
+                message: "Bookings retrieved successfully",
+                data: result
+            })
+        }
+    }
 })
 
 // getBookingById

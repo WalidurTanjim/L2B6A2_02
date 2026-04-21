@@ -72,18 +72,61 @@ const getBookings = async(user: JwtPayload) => {
         if(role === "admin") {
             const result = await client.query(`SELECT * FROM bookings`);
             const booking = result.rows;
-            // console.log("Admin bookings:", booking);
+            
 
             if(booking.length < 1) throw new AppError("No booking available", 404);
+
+            // find customer and vehicle by customer_id and vehicle_id
+            for(let bookingInfo of booking) {
+                // console.log("✔⭕ Booking info:", bookingInfo)
+                // find customer by customer_id
+                const findCustomerRes = await client.query(`SELECT * FROM users WHERE id=$1`, [bookingInfo?.customer_id]);
+                const customerRes = findCustomerRes.rows[0];
+                // console.log("✔⭕ Customer res:", customerRes)
+                const customer = {
+                    name: customerRes.name,
+                    email: customerRes.email
+                }
+
+                // find vehicle by vehicle_id
+                const findVehicleRes = await client.query(`SELECT * FROM vehicles WHERE id=$1`, [bookingInfo?.vehicle_id]);
+                const vehicleRes = findVehicleRes.rows[0];
+                // console.log("✔⭕ Vehicle res:", vehicelRes)
+                const vehicle = {
+                    vehicle_name: vehicleRes.vehicle_name,
+                    registration_number: vehicleRes.registration_number
+                }
+
+                bookingInfo.customer = customer;
+                bookingInfo.vehicle = vehicle;
+            }
+
+            // console.log("✔⭕ Admin bookings:", booking);
 
             await client.query("COMMIT");
             return booking;
         }else{
             const result = await client.query(`SELECT * FROM bookings WHERE customer_id=$1`, [id]);
             const booking = result.rows;
-            // console.log("Customer booking:", booking);
+            
 
             if(booking.length < 1) throw new AppError("No booking available", 404);
+
+            // find vehicle by vehicle_id
+            for(let bookingInfo of booking) {
+                const findVehicleRes = await client.query(`SELECT * FROM vehicles WHERE id=$1`, [bookingInfo?.vehicle_id]);
+                const vehicleRes = findVehicleRes.rows[0];
+                const { vehicle_name, registration_number, type } = vehicleRes;
+                
+                const vehicle = {
+                    "vehicle_name": vehicle_name,
+                    "registration_number": registration_number,
+                    "type": type
+                }
+
+                bookingInfo.vehicle = vehicle
+            }
+            // console.log("✔⭕ Customer booking:", booking);
 
             await client.query("COMMIT");
             return booking;

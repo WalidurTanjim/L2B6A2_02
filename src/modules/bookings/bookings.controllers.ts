@@ -65,9 +65,11 @@ const updateBookingById = catchAsync(async(req: Request, res: Response) => {
     const { bookingId } = req.params;
     const { status } = req.body;
 
+    if(!['cancelled', 'returned'].includes(status)) throw new AppError("Invalid status", 400);
+
     const result = await bookingsServices.updateBookingById(status, bookingId as string);
 
-    console.log("✔✔ Update booking status res from ctrl:", result);
+    // console.log("✔✔ Update booking status res from ctrl:", result);
     const { booking, vehicle } = result;
 
     if(booking.status === "cancelled") {
@@ -82,8 +84,8 @@ const updateBookingById = catchAsync(async(req: Request, res: Response) => {
             message: "Booking marked as returned, Vehicle is now available",
             data: {
                 ...booking,
-                "vahicle": {
-                    "availability_status": vehicle.availability_status
+                "vehicle": {
+                    "availability_status": vehicle?.availability_status
                 }
             }
         })

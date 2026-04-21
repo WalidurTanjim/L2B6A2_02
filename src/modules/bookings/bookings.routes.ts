@@ -12,6 +12,6 @@ route.get('/', bookingsControllers.getBookings);
 route.get('/:bookingId', bookingsControllers.getBookingById);
 
 // PUT method
-route.put('/:bookingId', bookingsControllers.updateBookingById);
+route.put('/:bookingId', auth("admin", "customer"), bookingsControllers.updateBookingById);
 
 export const bookingsRoute = route;

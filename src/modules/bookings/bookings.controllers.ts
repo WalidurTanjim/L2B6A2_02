@@ -64,8 +64,12 @@ const getBookingById = catchAsync(async(req: Request, res: Response) => {
 const updateBookingById = catchAsync(async(req: Request, res: Response) => {
     const { bookingId } = req.params;
     const { status } = req.body;
+    const user = req.user;
+    console.log(user)
 
     if(!['cancelled', 'returned'].includes(status)) throw new AppError("Invalid status", 400);
+
+    if(user?.role === "customer" && status === "returned") throw new AppError("Customers can't return booking", 403);
 
     const result = await bookingsServices.updateBookingById(status, bookingId as string);
 

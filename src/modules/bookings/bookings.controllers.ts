@@ -67,11 +67,25 @@ const updateBookingById = catchAsync(async(req: Request, res: Response) => {
 
     const result = await bookingsServices.updateBookingById(status, bookingId as string);
 
-    if(result.status === 'cancelled') {
+    console.log("✔✔ Update booking status res from ctrl:", result);
+    const { booking, vehicle } = result;
+
+    if(booking.status === "cancelled") {
         res.status(200).json({
             success: true,
             message: "Booking cancelled successfully",
-            data: result
+            data: booking
+        })
+    }else {
+        res.status(200).json({
+            success: true,
+            message: "Booking marked as returned, Vehicle is now available",
+            data: {
+                ...booking,
+                "vahicle": {
+                    "availability_status": vehicle.availability_status
+                }
+            }
         })
     }
 })

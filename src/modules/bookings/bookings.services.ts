@@ -72,13 +72,82 @@ const getBookingById = async(id: string) => {
 }
 
 // updateBookingById
-const updateBookingById = async(status: UpdateBooking, id: string) => {
-    const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`, [status, id]);
+const updateBookingById = async(status: "cancelled" | "returned", id: string) => {
+    // find booking by id
+    const bookingRes = await pool.query(`SELECT * FROM bookings WHERE id=$1`, [id]);
 
-    if(result.rowCount === 0) throw new AppError("Booking not found!", 404);
+    if(bookingRes.rows.length < 1) throw new AppError("Booking not found!", 404);
 
-    const booking = result.rows[0];
-    return booking;
+    const booking = bookingRes.rows[0];
+    console.log("⭕ Booking from booking srv:", booking);
+
+    const { vehicle_id, rent_start_date, rent_end_date, status: bookingStatus } = booking;
+
+    // find vehicle by vehicle_id from booking
+    const vehicleRes = await pool.query(`SELECT * FROM vehicles WHERE id=$1`, [booking.vehicle_id]);
+
+    if(vehicleRes.rows.length < 1) throw new AppError("Vehicle not found", 404);
+
+    const vehicle = vehicleRes.rows[0];
+    console.log("⭕ Vehicle from booking srv:", vehicle);
+
+    // if status is "cancelled"
+    if(status === "cancelled") {
+        // is today greater than rent_start_date?
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const startDate = new Date(rent_start_date);
+        if(today >= startDate) throw new AppError("Booking has been started. You can't cancel.", 400);
+        
+        if(bookingStatus === "cancelled") throw new AppError("Booking already cancelled", 400);
+
+        if(bookingStatus === "returned") throw new AppError("Booking already returned. You can't change status", 400);
+
+        const updateBookingStatusRes = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`, [status, id]);
+        
+        // if(updateBookingStatusRes.rowCount === 0) throw new AppError("Booking data not found!", 404);
+        const updateBookingStatus = updateBookingStatusRes.rows[0];
+        console.log("⭕ Update booking status:", updateBookingStatus);
+        return { 
+            booking: updateBookingStatus, 
+            vehicle: null
+        };
+    }
+
+    // if status is "returned"
+    if(status === "returned") {
+        // check is this returned or not
+        if(bookingStatus === "returned") {
+            throw new AppError("Booking already returned. You can't change status", 400);
+        }
+
+        // check is this available or not
+        if(bookingStatus === "available") {
+            throw new AppError("Booking is available. You can't retur this", 400);
+        }
+
+        if(bookingStatus === "cancelled") {
+            const updateBookingStatusReturnRes = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`, [status, id]);
+            const updateBookingStatusReturn = updateBookingStatusReturnRes.rows[0];
+            console.log("✅ Update booking status return:", updateBookingStatusReturn);
+
+            let updateVehicleAvailabilityStatusAvailable = null;
+
+            if(updateBookingStatusReturn.status === "returned") {
+                const updateVehicleAvailabilityStatusAvailableRes = await pool.query(`UPDATE vehicles SET availability_status=$1 WHERE id=$2 RETURNING *`, ['available', vehicle_id]);
+                updateVehicleAvailabilityStatusAvailable = updateVehicleAvailabilityStatusAvailableRes.rows[0];
+                console.log("✅ Update vehicle availability status available:", updateVehicleAvailabilityStatusAvailable);
+            }
+
+            return { 
+                booking: updateBookingStatusReturn,
+                vehicle: updateVehicleAvailabilityStatusAvailable 
+            };
+        }
+    }
+
+    throw new AppError("Invalid status", 400)
 }
 
 export const bookingsServices = {

@@ -74,12 +74,16 @@ const getBookings = async(user: JwtPayload) => {
             const booking = result.rows;
             // console.log("Admin bookings:", booking);
 
+            if(booking.length < 1) throw new AppError("No booking available", 404);
+
             await client.query("COMMIT");
             return booking;
         }else{
             const result = await client.query(`SELECT * FROM bookings WHERE customer_id=$1`, [id]);
             const booking = result.rows;
             // console.log("Customer booking:", booking);
+
+            if(booking.length < 1) throw new AppError("No booking available", 404);
 
             await client.query("COMMIT");
             return booking;

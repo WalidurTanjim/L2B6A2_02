@@ -2,6 +2,7 @@ import { pool } from "../../config/db";
 import { UpdateUser, User } from "../../types/user";
 import bcrypt from "bcryptjs";
 import AppError from "../../utils/AppError";
+import { JwtPayload } from "jsonwebtoken";
 
 // createUser
 const createUser = async(payload: User) => {
@@ -44,15 +45,48 @@ const deleteUserById = async(id: string) => {
 }
 
 // updateUserById
-const updateUserById = async(payload: UpdateUser, id: string) => {
-    const { name, email, phone, role } = payload;
+const updateUserById = async(payload: UpdateUser, id: string, user: JwtPayload) => {
+    const { email: loggedInEmail, role: loggedInRole } = user;
 
-    const result = await pool.query(`UPDATE users SET name=$1, email=$2, phone=$3, role=$4 WHERE id=$5 RETURNING *`, [name, email, phone, role, id]);
+    // customer can't change role
+    if(loggedInRole === "customer" && payload?.role) throw new AppError("You are not allowed to change role", 403);
 
-    if(result.rowCount === 0) throw new AppError("User not found!", 404);
+    // find user by id
+    const findUserRes = await pool.query(`SELECT * FROM users WHERE id=$1`, [id]);
 
-    const user = result.rows[0];
-    return user;
+    if(findUserRes.rowCount === 0) throw new AppError("User not found!", 404);
+
+    const targetUser = findUserRes.rows[0];
+
+    // customer can update only own profile
+    if(loggedInRole === "customer" && targetUser.email !== loggedInEmail) throw new AppError("Unauthorized access", 403);
+
+    // dynamic fields
+    const fields: string[] = [];
+    const values: any[] = [];
+    let count = 1;
+
+    for(const key in payload) {
+        const value = payload[key as keyof UpdateUser];
+
+        if(value !== undefined) {
+            fields.push(`${key}=$${count}`);
+            values.push(value);
+            count++;
+        }
+    }
+
+    if(fields.length === 0) throw new AppError("No fields provided to update", 404);
+
+    const query = `UPDATE users SET ${fields.join(", ")} WHERE id=$${count} RETURNING id, name, email, phone, role`;
+    values.push(id);
+
+    try{
+        const result = await pool.query(query, values);
+        return result.rows[0]
+    }catch(err: any) {
+        throw err;
+    }
 }
 
 export const usersServices = {

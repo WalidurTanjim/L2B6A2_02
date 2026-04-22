@@ -12,8 +12,8 @@ export type LoginUser = {
 }
 
 export type UpdateUser = {
-    name: string;
-    email: string;
-    phone: string;
-    role: "admin" | "customer"
+    name?: string;
+    email?: string;
+    phone?: string;
+    role?: "admin" | "customer"
 }

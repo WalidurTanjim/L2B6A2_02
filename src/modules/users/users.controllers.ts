@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import { usersServices } from "./users.services";
 import AppError from "../../utils/AppError";
+import { JwtPayload } from "jsonwebtoken";
 
 // createUser
 const createUser = catchAsync(async(req: Request, res: Response) => {
@@ -70,9 +71,11 @@ const deleteUserById = catchAsync(async(req: Request, res: Response) => {
 // updateUserById
 const updateUserById = catchAsync(async(req: Request, res: Response) => {
     const { userId } = req.params;
-    const { name, email, phone, role } = req.body;
+    const payload = req.body;
+    const user = req?.user;
+    // console.log("⭕✔ Loggedin user from ctrl:", user);
     
-    const result = await usersServices.updateUserById({ name, email, phone, role }, userId as string);
+    const result = await usersServices.updateUserById(payload, userId as string, user as JwtPayload);
 
     res.status(200).json({
         success: true,

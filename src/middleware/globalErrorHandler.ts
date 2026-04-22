@@ -6,7 +6,8 @@ const sendErrorDev = (err: any, res: Response) => {
     res.status(err.statusCode || 500).json({
         success: false,
         message: err.message,
-        error: err,
+        errorCode: err.errorCode,
+        details: err.details,
         stack: err.stack
     })
 }

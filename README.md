@@ -12,26 +12,27 @@ It supports authentication, role-based access control, vehicle management, booki
 ### 🔐 Authentication & Authorization
 - User Sign Up / Sign In
 - JWT-based authentication
-- Role-based access control (Admin / User)
+- Role-based access control (admin / customer)
 - Password hashing using bcrypt
 
 ### 👤 User Management
-- Create user
-- Update user
-- Delete user
-- View user profile
+- Create user (public)
+- Login user (public)
+- Update user (admin only & customer can update own profile)
+- Delete user (admin)
+- View user profile (admin can view all user's profile & user can view only own)
 
 ### 🚗 Vehicle Management
-- Add new vehicle (Admin only)
-- Update vehicle details
-- Delete vehicle
-- Get all available vehicles
+- Add new vehicle (admin)
+- Update vehicle details (admin)
+- Delete vehicle (admin)
+- Get all available vehicles (public)
 
 ### 📅 Booking System
-- Create booking
-- Update booking status
-- Cancel booking
-- View booking history
+- Create booking (admin & customer)
+- Update booking status (role based)
+- Cancel booking (who had make a booking)
+- View booking history (role based)
 
 ### 🛡️ Security
 - JWT token verification middleware

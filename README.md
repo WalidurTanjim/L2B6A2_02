@@ -52,4 +52,27 @@ It supports authentication, role-based access control, vehicle management, booki
 
 ---
 
-## 📁 Project Structure
+
+---
+
+## ⚙️ Setup & Installation Guide
+
+Follow the steps below to run the project locally:
+
+---
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone <repo_link>
+cd project-folder-name
+code .
+npm install
+src/config/index.ts
+
+PORT=5000
+PG_CONNECTIN_STRING=your_postgres_connection_string
+TOKEN_SECRET=your_secret_key
+
+npm run dev
+```

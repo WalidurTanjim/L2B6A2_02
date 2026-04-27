@@ -69,9 +69,16 @@ cd project-folder-name
 code .
 npm install
 
-.env => -PORT=5000
-        -PG_CONNECTIN_STRING=your_postgres_connection_string
-        -TOKEN_SECRET=your_secret_key
+.env => PORT=5000
+        PG_CONNECTIN_STRING=your_postgres_connection_string
+        TOKEN_SECRET=your_secret_key
 
 npm run dev
+```
+
+### 2️⃣ Admin credentials
+
+```bash
+**Email address:** walid.admin@gmail.com
+**Password:** aaBB1!2@
 ```

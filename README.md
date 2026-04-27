@@ -78,7 +78,5 @@ npm run dev
 
 ### 2️⃣ Admin credentials
 
-```bash
-**Email address:** walid.admin@gmail.com
-**Password:** aaBB1!2@
-```
+- **Email address:** walid.admin@gmail.com
+- **Password:** aaBB1!2@

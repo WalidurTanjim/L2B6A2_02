@@ -49,7 +49,7 @@ It supports authentication, role-based access control, vehicle management, booki
 - **Authentication:** JWT (JSON Web Token)
 - **Password Hashing:** bcryptjs
 - **Environment Variables:** dotenv
-- **Architecture:** Modular / Layered structure (Controller, Service, Route)
+- **Architecture:** Modular / Layered structure (Controllers, Services, Routes)
 
 ---
 
